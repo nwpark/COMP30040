@@ -74,7 +74,7 @@ module convolutional_layer #(
           .D_WIDTH(D_WIDTH),
           .Q_WIDTH(Q_WIDTH)
         ) inner_product (
-          .input_data(pixel_buff_out[j][`L(CONV_WIDTH, i):`R(CONV_WIDTH, i)]),
+          .input_data(pixel_buff_out[j]),
           .output_data(inner_products[j][`L(Q_WIDTH, i):`R(Q_WIDTH, i)])
         );
       end
