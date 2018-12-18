@@ -26,6 +26,8 @@ module convolutional_layer #(
 
   // Internal signals / buses
   wire [CONV_WIDTH-1:0] pixel_buff_out [D_CHANNELS-1:0];
+  wire [Q_WIDTH*Q_CHANNELS-1:0] inner_products [D_CHANNELS-1:0];
+  wire [Q_WIDTH*Q_CHANNELS-1:0] inner_products_sum [D_CHANNELS-1:0];
 
   wire [(`LOG2(IMAGE_SIZE))-1:0] buffer_wr_addr;
   wire [(`LOG2(IMAGE_SIZE))-1:0] buffer_rd_addr;
@@ -72,12 +74,21 @@ module convolutional_layer #(
           .D_WIDTH(D_WIDTH),
           .Q_WIDTH(Q_WIDTH)
         ) inner_product (
-          .input_data(pixel_buff_out[i][`L(CONV_WIDTH, j):`R(CONV_WIDTH, j)]),
-          .output_data(output_data[`L(Q_WIDTH, j):`R(Q_WIDTH, j)])
+          .input_data(pixel_buff_out[j][`L(CONV_WIDTH, i):`R(CONV_WIDTH, i)]),
+          .output_data(inner_products[j][`L(Q_WIDTH, i):`R(Q_WIDTH, i)])
         );
       end
     end
   endgenerate
+
+  // Adder tree for inner product units
+  assign inner_products_sum[0] = inner_products[0];
+  generate
+    for(i = 0; i < D_CHANNELS-1; i=i+1) begin : input_channels
+      assign inner_products_sum[i+1] = inner_products_sum[i] + inner_products[i+1];
+    end
+  endgenerate
+  assign output_data = inner_products_sum[D_CHANNELS-1];
 
 endmodule
 
