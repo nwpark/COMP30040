@@ -11,7 +11,7 @@ module convolutional_layer_test ();
   parameter D_WIDTH = 8;
   parameter Q_WIDTH = 16;
   parameter D_CHANNELS = 2;
-  parameter Q_CHANNELS = 2;
+  parameter Q_CHANNELS = 3;
   parameter total_input_pixels = 2048;
 
   //============================================================================
@@ -22,12 +22,15 @@ module convolutional_layer_test ();
 
   integer input_pixel_count = 0;
 
-  `define INPUT_DATA {c0[input_pixel_count],c1[input_pixel_count]}
-  `define EXPECTED_OUTPUT_DATA \
-    {(c0[input_pixel_count-1] + c0[input_pixel_count-2] + c0[input_pixel_count-65] + c0[input_pixel_count-66] \
-      + c1[input_pixel_count-1] + c1[input_pixel_count-2] + c1[input_pixel_count-65] + c1[input_pixel_count-66]), \
-     (c0[input_pixel_count-1] + c0[input_pixel_count-2] + c0[input_pixel_count-65] + c0[input_pixel_count-66] \
-      + c1[input_pixel_count-1] + c1[input_pixel_count-2] + c1[input_pixel_count-65] + c1[input_pixel_count-66])}
+  `define INPUT_DATA {c0[input_pixel_count], c1[input_pixel_count]}
+
+  `define EXPECTED_OUTPUT_C0 \
+      c0[input_pixel_count-1] + c0[input_pixel_count-2] + c0[input_pixel_count-65] + c0[input_pixel_count-66] \
+      + c1[input_pixel_count-1] + c1[input_pixel_count-2] + c1[input_pixel_count-65] + c1[input_pixel_count-66]
+  `define EXPECTED_OUTPUT_C1 \
+      c0[input_pixel_count-1] + c0[input_pixel_count-2] + c0[input_pixel_count-65] + c0[input_pixel_count-66] \
+      + c1[input_pixel_count-1] + c1[input_pixel_count-2] + c1[input_pixel_count-65] + c1[input_pixel_count-66]
+  `define EXPECTED_OUTPUT_DATA `EXPECTED_OUTPUT_C0 | (`EXPECTED_OUTPUT_C1 << Q_WIDTH) | (`EXPECTED_OUTPUT_C1 << (Q_WIDTH*2))
 
   //============================================================================
   // DUT

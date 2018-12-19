@@ -7,19 +7,19 @@
 // Simple register.
 //
 // Paramaters:
-// SIZE - Size of register (number of bits).
+// WIDTH - Size of register (number of bits).
 //------------------------------------------------------------------------------
 
-`ifndef REG32
-`define REG32
+`ifndef REG
+`define REG
 
 module register #(
-    parameter SIZE = 32
+    parameter WIDTH = -1
   )(
-    input wire clk,
-		input wire clk_en,
-		input wire [SIZE-1:0] D,
-		output reg [SIZE-1:0] Q
+    input wire            clk,
+		input wire            clk_en,
+		input wire [WIDTH-1:0] D,
+		output reg [WIDTH-1:0] Q
 	);
 
   always @(posedge clk)

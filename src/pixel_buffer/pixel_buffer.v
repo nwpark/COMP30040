@@ -3,7 +3,7 @@
 
 `include "/home/mbyx4np3/COMP30040/COMP30040/src/common/definitions.v"
 `include "/home/mbyx4np3/COMP30040/COMP30040/src/common/block_ram.v"
-`include "/home/mbyx4np3/COMP30040/COMP30040/src/register.v"
+`include "/home/mbyx4np3/COMP30040/COMP30040/src/common/register.v"
 
 module pixel_buffer #(
   parameter FILTER_SIZE = -1,
@@ -23,21 +23,15 @@ module pixel_buffer #(
   genvar i;
   genvar j;
 
-  // Assign output data
-  generate
-    for (i = 0; i < FILTER_SIZE; i = i+1) begin : out_data
-      assign output_data[`L(FILTER_SIZE*D_WIDTH, i):`R(FILTER_SIZE*D_WIDTH, i)] = data[i];
-    end
-  endgenerate
-
+  // Assign input data to input of pixel register
   assign data[FILTER_SIZE-1][`L(D_WIDTH, FILTER_SIZE-1):`R(D_WIDTH, FILTER_SIZE-1)] = input_data;
 
   // Registers for each row
   generate
     for (i = 0; i < FILTER_SIZE; i = i+1) begin : registers_i
       for (j = 0; j < FILTER_SIZE-1; j = j+1) begin : registers_j
-        register#(
-          .SIZE(D_WIDTH)
+        register #(
+          .WIDTH(D_WIDTH)
         ) pixel_reg (
           .clk(clk),
           .clk_en(clk_en),
@@ -53,8 +47,8 @@ module pixel_buffer #(
     for (i = 0; i < FILTER_SIZE-1; i = i+1) begin : buffers
       block_ram #(
         .WIDTH(D_WIDTH),
-        .SIZE(IMAGE_SIZE-(FILTER_SIZE-1))
-      ) fifo_buffer(
+        .DEPTH(IMAGE_SIZE-(FILTER_SIZE-1))
+      ) line_buffer (
         .clk(clk),
         .clk_en(clk_en),
         .wr_addr(buffer_wr_addr),
@@ -62,6 +56,13 @@ module pixel_buffer #(
         .rd_addr(buffer_rd_addr),
         .rd_data(data[i][`L(D_WIDTH, FILTER_SIZE-1):`R(D_WIDTH, FILTER_SIZE-1)])
       );
+    end
+  endgenerate
+
+  // Assign output data
+  generate
+    for (i = 0; i < FILTER_SIZE; i = i+1) begin : out_data
+      assign output_data[`L(FILTER_SIZE*D_WIDTH, i):`R(FILTER_SIZE*D_WIDTH, i)] = data[i];
     end
   endgenerate
 
