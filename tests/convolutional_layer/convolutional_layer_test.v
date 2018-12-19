@@ -12,25 +12,25 @@ module convolutional_layer_test ();
   parameter Q_WIDTH = 16;
   parameter D_CHANNELS = 2;
   parameter Q_CHANNELS = 3;
-  parameter total_input_pixels = 2048;
+  parameter FILTER_SIZE = 2;
+  parameter IMAGE_WIDTH = 64;
+  parameter IMAGE_HEIGHT = 32;
+  parameter total_input_pixels = IMAGE_WIDTH*IMAGE_HEIGHT;
+  parameter total_output_pixels = (IMAGE_WIDTH-FILTER_SIZE+1)*(IMAGE_HEIGHT-FILTER_SIZE+1);
 
   //============================================================================
   // Declarations and data
   //============================================================================
   reg [D_WIDTH-1:0] c0 [0:total_input_pixels];
   reg [D_WIDTH-1:0] c1 [0:total_input_pixels];
-
   integer input_pixel_count = 0;
 
   `define INPUT_DATA {c0[input_pixel_count], c1[input_pixel_count]}
 
-  `define EXPECTED_OUTPUT_C0 \
-      c0[input_pixel_count-1] + c0[input_pixel_count-2] + c0[input_pixel_count-65] + c0[input_pixel_count-66] \
-      + c1[input_pixel_count-1] + c1[input_pixel_count-2] + c1[input_pixel_count-65] + c1[input_pixel_count-66]
-  `define EXPECTED_OUTPUT_C1 \
-      c0[input_pixel_count-1] + c0[input_pixel_count-2] + c0[input_pixel_count-65] + c0[input_pixel_count-66] \
-      + c1[input_pixel_count-1] + c1[input_pixel_count-2] + c1[input_pixel_count-65] + c1[input_pixel_count-66]
-  `define EXPECTED_OUTPUT_DATA `EXPECTED_OUTPUT_C0 | (`EXPECTED_OUTPUT_C1 << Q_WIDTH) | (`EXPECTED_OUTPUT_C1 << (Q_WIDTH*2))
+  reg [Q_WIDTH-1:0] expected_output [0:total_output_pixels];
+  integer output_pixel_count = 0;
+
+  `define EXPECTED_OUTPUT_DATA {FILTER_SIZE{expected_output[output_pixel_count]}}
 
   //============================================================================
   // DUT
@@ -46,8 +46,8 @@ module convolutional_layer_test ();
     .Q_WIDTH(Q_WIDTH),
     .D_CHANNELS(D_CHANNELS),
     .Q_CHANNELS(Q_CHANNELS),
-    .FILTER_SIZE(2),
-    .IMAGE_SIZE(64)
+    .FILTER_SIZE(FILTER_SIZE),
+    .IMAGE_SIZE(IMAGE_WIDTH)
   ) conv_layer (
     .clk(clk),
     .clk_en(clk_en),
@@ -62,9 +62,11 @@ module convolutional_layer_test ();
   always #(`PERIOD/2) clk = ~clk;
 
   initial begin
-    clk = 1; clk_en = 1;
+    clk = 0; clk_en = 1;
     $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/channel_0.hex", c0);
     $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/channel_1.hex", c1);
+
+    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/output_data.hex", expected_output);
   end
 
   initial begin
@@ -77,7 +79,8 @@ module convolutional_layer_test ();
   // FSM to Test the Unit
   //============================================================================
   always @ (posedge clk) begin
-    if (input_pixel_count == total_input_pixels) begin
+    if (input_pixel_count > total_input_pixels) begin
+      assertEquals32(output_pixel_count, total_output_pixels, "Incorrect number of pixels output");
       completeSimulation();
     end
 
@@ -90,8 +93,10 @@ module convolutional_layer_test ();
   //============================================================================
   // Check that output data is correct
   always @ (posedge clk) begin
-    if (input_pixel_count > 65)
+    if (valid) begin
       assertEquals32(output_data, `EXPECTED_OUTPUT_DATA, "Incorrect ouput_data");
+      output_pixel_count <= output_pixel_count + 1;
+    end
   end
 
 endmodule
