@@ -5,7 +5,7 @@
 
 module inner_product_unit #(
   parameter SIZE = -1,
-  parameter COEFFICIENTS = 'h01010101,
+  parameter COEFFICIENTS = 'h01_0101_0101_0101_0101_0101_0101_0101_0101_0101_0101_0101_0101,
   parameter D_WIDTH = -1,
   parameter Q_WIDTH = -1
 )(

@@ -49,6 +49,22 @@ begin
 end
 endtask
 
+// Assert that the given value is equal to the expected value
+task assertEquals256(input [256:0] actual,
+                     input [256:0] expected,
+                     input [0:300] message);
+  begin
+    if (actual !== expected) begin
+      $display("Assertion Error at time %t", $time);
+      $display("%s", message);
+      $display("Expected value of %x, but actual value was %x.", expected,actual);
+      error = 1;
+      #(`PERIOD*10);
+      $stop;
+    end
+  end
+endtask
+
 // Assert that the given value is high
 task assertTrue(input val, input [0:300] message);
   assertEquals(val, 1, message);

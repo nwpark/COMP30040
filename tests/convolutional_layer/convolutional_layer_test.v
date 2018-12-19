@@ -10,9 +10,9 @@ module convolutional_layer_test ();
   //============================================================================
   parameter D_WIDTH = 8;
   parameter Q_WIDTH = 16;
-  parameter D_CHANNELS = 2;
-  parameter Q_CHANNELS = 3;
-  parameter FILTER_SIZE = 2;
+  parameter D_CHANNELS = 3;
+  parameter Q_CHANNELS = 5;
+  parameter FILTER_SIZE = 5;
   parameter IMAGE_WIDTH = 64;
   parameter IMAGE_HEIGHT = 32;
   parameter total_input_pixels = IMAGE_WIDTH*IMAGE_HEIGHT;
@@ -23,14 +23,15 @@ module convolutional_layer_test ();
   //============================================================================
   reg [D_WIDTH-1:0] c0 [0:total_input_pixels];
   reg [D_WIDTH-1:0] c1 [0:total_input_pixels];
+  reg [D_WIDTH-1:0] c2 [0:total_input_pixels];
   integer input_pixel_count = 0;
 
-  `define INPUT_DATA {c0[input_pixel_count], c1[input_pixel_count]}
+  `define INPUT_DATA {c0[input_pixel_count], c1[input_pixel_count], c2[input_pixel_count]}
 
   reg [Q_WIDTH-1:0] expected_output [0:total_output_pixels];
   integer output_pixel_count = 0;
 
-  `define EXPECTED_OUTPUT_DATA {FILTER_SIZE{expected_output[output_pixel_count]}}
+  `define EXPECTED_OUTPUT_DATA {Q_CHANNELS{expected_output[output_pixel_count]}}
 
   //============================================================================
   // DUT
@@ -65,6 +66,7 @@ module convolutional_layer_test ();
     clk = 0; clk_en = 1;
     $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/channel_0.hex", c0);
     $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/channel_1.hex", c1);
+    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/channel_2.hex", c2);
 
     $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/output_data.hex", expected_output);
   end
@@ -94,7 +96,7 @@ module convolutional_layer_test ();
   // Check that output data is correct
   always @ (posedge clk) begin
     if (valid) begin
-      assertEquals32(output_data, `EXPECTED_OUTPUT_DATA, "Incorrect ouput_data");
+      assertEquals256(output_data, `EXPECTED_OUTPUT_DATA, "Incorrect ouput_data");
       output_pixel_count <= output_pixel_count + 1;
     end
   end

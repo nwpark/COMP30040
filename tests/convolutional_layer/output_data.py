@@ -28,11 +28,15 @@ channel_0 = (32 * np.random.random((32, 64))).astype(int)
 np.random.seed(1)
 channel_1 = (32 * np.random.random((32, 64))).astype(int)
 
-filter = np.ones((2,2)).astype(int)
+np.random.seed(2)
+channel_2 = (32 * np.random.random((32, 64))).astype(int)
+
+filter = np.ones((5,5)).astype(int)
 
 c0_out = sp.convolve2d(channel_0, filter, mode='valid', boundary='wrap')
 c1_out = sp.convolve2d(channel_1, filter, mode='valid', boundary='wrap')
+c2_out = sp.convolve2d(channel_2, filter, mode='valid', boundary='wrap')
 
-output = c0_out + c1_out
+output = c0_out + c1_out + c2_out
 
 printArray(output, 'output_data.hex')
