@@ -2,7 +2,6 @@
 
 from __future__ import print_function
 import numpy as np
-import scipy.signal as sp
 
 
 def int2hex(number):
@@ -22,6 +21,18 @@ def printArray(array, file):
       print(file=fh)
 
 
+def maxpooling(array):
+  # reshape each row into groups of 2 (horizontally adjacent)
+  a=array.reshape(32,32,2)
+  # take maximum from each group of 2
+  a=np.amax(a, axis=2)
+  # reshape each row into groups of 2 rows (to get vertically adjacent pixels)
+  a=a.reshape(16,2,32)
+  # element wise maximum for each group of 2 rows
+  a=np.maximum(a[:,0],a[:,1])
+  return a
+
+
 np.random.seed(0)
 channel_0 = (32 * np.random.random((32, 64))).astype(int)
 
@@ -33,10 +44,10 @@ channel_2 = (32 * np.random.random((32, 64))).astype(int)
 
 filter = np.ones((5,5)).astype(int)
 
-c0_out = sp.convolve2d(channel_0, filter, mode='valid', boundary='wrap')
-c1_out = sp.convolve2d(channel_1, filter, mode='valid', boundary='wrap')
-c2_out = sp.convolve2d(channel_2, filter, mode='valid', boundary='wrap')
+c0_out = maxpooling(channel_0)
+c1_out = maxpooling(channel_1)
+c2_out = maxpooling(channel_2)
 
-output = c0_out + c1_out + c2_out
+output = c0_out
 
 printArray(output, 'output_data.hex')
