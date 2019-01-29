@@ -15,6 +15,7 @@ module convolutional_layer_test ();
   parameter FILTER_SIZE = 5;
   parameter IMAGE_WIDTH = 64;
   parameter IMAGE_HEIGHT = 32;
+  parameter STRIDE = 1;
   parameter total_input_pixels = IMAGE_WIDTH*IMAGE_HEIGHT;
   parameter total_output_pixels = (IMAGE_WIDTH-FILTER_SIZE+1)*(IMAGE_HEIGHT-FILTER_SIZE+1);
 
@@ -48,7 +49,8 @@ module convolutional_layer_test ();
     .D_CHANNELS(D_CHANNELS),
     .Q_CHANNELS(Q_CHANNELS),
     .FILTER_SIZE(FILTER_SIZE),
-    .IMAGE_SIZE(IMAGE_WIDTH)
+    .IMAGE_SIZE(IMAGE_WIDTH),
+    .STRIDE(STRIDE)
   ) conv_layer (
     .clk(clk),
     .clk_en(clk_en),

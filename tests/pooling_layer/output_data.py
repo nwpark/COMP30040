@@ -42,12 +42,10 @@ channel_1 = (32 * np.random.random((32, 64))).astype(int)
 np.random.seed(2)
 channel_2 = (32 * np.random.random((32, 64))).astype(int)
 
-filter = np.ones((5,5)).astype(int)
 
 c0_out = maxpooling(channel_0)
 c1_out = maxpooling(channel_1)
 c2_out = maxpooling(channel_2)
 
-output = c0_out
-
-printArray(output, 'output_data.hex')
+data = (c0_out << 16) + (c1_out << 8) + c2_out
+printArray(data, file='output_data.hex')

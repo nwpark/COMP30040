@@ -12,7 +12,8 @@ module convolutional_layer #(
   parameter D_CHANNELS = -1,
   parameter Q_CHANNELS = -1,
   parameter FILTER_SIZE = -1,
-  parameter IMAGE_SIZE = -1
+  parameter IMAGE_SIZE = -1,
+  parameter STRIDE = 1
 )(
   input wire                           clk,
   input wire                           clk_en,
@@ -38,7 +39,8 @@ module convolutional_layer #(
   // Pixel buffer controller
   pixel_buffer_controller #(
     .IMAGE_SIZE(IMAGE_SIZE),
-    .FILTER_SIZE(FILTER_SIZE)
+    .FILTER_SIZE(FILTER_SIZE),
+    .STRIDE(STRIDE)
   ) controller (
     .clk(clk),
     .clk_en(clk_en),

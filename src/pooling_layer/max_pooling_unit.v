@@ -19,11 +19,11 @@ module max_pooling_unit #(
 
   // Generate comparator tree
   generate
-    for(i = 0; i < SIZE-1; i=i+1) begin : compare
+    for(i = 0; i < SIZE+1; i=i+1) begin : compare
       assign comparisons[i+1]
-        = comparisons[i] > input_data[`L(D_WIDTH, i):`R(D_WIDTH, i)]
+        = comparisons[i] > input_data[`L(D_WIDTH, i+1):`R(D_WIDTH, i+1)]
           ? comparisons[i]
-          : input_data[`L(D_WIDTH, i):`R(D_WIDTH, i)];
+          : input_data[`L(D_WIDTH, i+1):`R(D_WIDTH, i+1)];
     end
   endgenerate
 

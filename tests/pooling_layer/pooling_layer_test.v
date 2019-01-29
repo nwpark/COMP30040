@@ -13,38 +13,36 @@ module pooling_layer_test ();
   parameter FILTER_SIZE = 2;
   parameter IMAGE_WIDTH = 64;
   parameter IMAGE_HEIGHT = 32;
+  parameter STRIDE = 2;
   parameter total_input_pixels = IMAGE_WIDTH*IMAGE_HEIGHT;
-  parameter total_output_pixels = (IMAGE_WIDTH-FILTER_SIZE+1)*(IMAGE_HEIGHT-FILTER_SIZE+1);
+  parameter total_output_pixels = total_input_pixels/(STRIDE**2);
 
   //============================================================================
   // Declarations and data
   //============================================================================
-  reg [D_WIDTH-1:0] c0 [0:total_input_pixels];
-  reg [D_WIDTH-1:0] c1 [0:total_input_pixels];
-  reg [D_WIDTH-1:0] c2 [0:total_input_pixels];
+  reg [D_WIDTH*CHANNELS-1:0] input_channels [0:total_input_pixels];
+  reg [D_WIDTH*CHANNELS-1:0] output_channels [0:total_output_pixels];
   integer input_pixel_count = 0;
-
-  `define INPUT_DATA {c0[input_pixel_count], c1[input_pixel_count], c2[input_pixel_count]}
-
-  reg [D_WIDTH-1:0] expected_output [0:total_output_pixels];
   integer output_pixel_count = 0;
 
-//  `define EXPECTED_OUTPUT_DATA expected_output[output_pixel_count]
+  `define INPUT_DATA input_channels[input_pixel_count]
+  `define EXPECTED_OUTPUT_DATA output_channels[output_pixel_count]
 
   //============================================================================
   // DUT
   //============================================================================
   reg  clk;
   reg  clk_en;
-  reg  [CHANNELS*WIDTH-1:0] input_data;
-  wire [CHANNELS*WIDTH-1:0] output_data;
+  reg  [CHANNELS*D_WIDTH-1:0] input_data;
+  wire [CHANNELS*D_WIDTH-1:0] output_data;
   wire valid;
 
   pooling_layer #(
     .D_WIDTH(D_WIDTH),
     .CHANNELS(CHANNELS),
     .FILTER_SIZE(FILTER_SIZE),
-    .IMAGE_SIZE(IMAGE_WIDTH)
+    .IMAGE_SIZE(IMAGE_WIDTH),
+    .STRIDE(STRIDE)
   ) pool_layer (
     .clk(clk),
     .clk_en(clk_en),
@@ -60,11 +58,8 @@ module pooling_layer_test ();
 
   initial begin
     clk = 0; clk_en = 1;
-    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/channel_0.hex", c0);
-    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/channel_1.hex", c1);
-    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/channel_2.hex", c2);
-
-    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/output_data.hex", expected_output);
+    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/pooling_layer/input_data.hex", input_channels);
+    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/pooling_layer/output_data.hex", output_channels);
   end
 
   initial begin

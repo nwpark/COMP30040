@@ -10,7 +10,8 @@ module pooling_layer #(
   parameter D_WIDTH = -1,
   parameter CHANNELS = -1,
   parameter FILTER_SIZE = -1,
-  parameter IMAGE_SIZE = -1
+  parameter IMAGE_SIZE = -1,
+  parameter STRIDE = -1
 )(
   input wire                         clk,
   input wire                         clk_en,
@@ -20,7 +21,7 @@ module pooling_layer #(
 );
 
   // Bits per convolution window
-  parameter CONV_WIDTH = D_WIDTH*FILTER_SIZE*FILTER_SIZE;
+  parameter CONV_WIDTH = D_WIDTH*(FILTER_SIZE**2);
 
   // Internal signals / buses
   wire [CONV_WIDTH-1:0] pixel_buff_out [CHANNELS-1:0];
@@ -34,7 +35,8 @@ module pooling_layer #(
   // Pixel buffer controller
   pixel_buffer_controller #(
     .IMAGE_SIZE(IMAGE_SIZE),
-    .FILTER_SIZE(FILTER_SIZE)
+    .FILTER_SIZE(FILTER_SIZE),
+    .STRIDE(STRIDE)
   ) controller (
     .clk(clk),
     .clk_en(clk_en),
@@ -60,7 +62,7 @@ module pooling_layer #(
       );
 
       max_pooling_unit #(
-        .SIZE(FILTER_SIZE*FILTER_SIZE),
+        .SIZE(FILTER_SIZE**2),
         .D_WIDTH(D_WIDTH)
       ) max_pool (
         .input_data(pixel_buff_out[i]),
