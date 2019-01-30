@@ -10,7 +10,7 @@ module relu_unit #(
   output wire [D_WIDTH-1:0] output_data
 );
 
-  assign output_data = input_data > 0 ? input_data : output_data;
+  assign output_data = input_data > 0 ? input_data : 0;
 
 endmodule
 

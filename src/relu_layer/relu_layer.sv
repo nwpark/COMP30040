@@ -2,13 +2,12 @@
 `define RELU_LAYER
 
 `include "/home/mbyx4np3/COMP30040/COMP30040/src/common/definitions.v"
+`include "/home/mbyx4np3/COMP30040/COMP30040/src/relu_layer/relu_unit.sv"
 
 module relu_layer #(
   parameter D_WIDTH = -1,
   parameter CHANNELS = -1
 )(
-  input wire                         clk,
-  input wire                         clk_en,
   input wire  [D_WIDTH*CHANNELS-1:0] input_data,
   output wire [D_WIDTH*CHANNELS-1:0] output_data
 );
