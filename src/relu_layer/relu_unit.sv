@@ -6,8 +6,8 @@
 module relu_unit #(
   parameter D_WIDTH = -1
 )(
-  input  wire [D_WIDTH-1:0] input_data,
-  output wire [D_WIDTH-1:0] output_data
+  input  wire signed [D_WIDTH-1:0] input_data,
+  output wire signed [D_WIDTH-1:0] output_data
 );
 
   assign output_data = input_data > 0 ? input_data : 0;
