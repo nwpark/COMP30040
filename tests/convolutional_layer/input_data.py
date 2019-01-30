@@ -30,6 +30,5 @@ channel_1 = (32 * np.random.random((32, 64))).astype(int)
 np.random.seed(2)
 channel_2 = (32 * np.random.random((32, 64))).astype(int)
 
-printArray(channel_0, file='channel_0.hex')
-printArray(channel_1, file='channel_1.hex')
-printArray(channel_2, file='channel_2.hex')
+data = (channel_0 << 16) + (channel_1 << 8) + channel_2
+printArray(data, file='input_data.hex')

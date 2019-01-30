@@ -20,13 +20,13 @@ module pooling_layer_test ();
   //============================================================================
   // Declarations and data
   //============================================================================
-  reg [D_WIDTH*CHANNELS-1:0] input_channels [0:total_input_pixels];
-  reg [D_WIDTH*CHANNELS-1:0] output_channels [0:total_output_pixels];
+  reg [D_WIDTH*CHANNELS-1:0] input_array [0:total_input_pixels];
+  reg [D_WIDTH*CHANNELS-1:0] output_array [0:total_output_pixels];
   integer input_pixel_count = 0;
   integer output_pixel_count = 0;
 
-  `define INPUT_DATA input_channels[input_pixel_count]
-  `define EXPECTED_OUTPUT_DATA output_channels[output_pixel_count]
+  `define INPUT_DATA input_array[input_pixel_count]
+  `define EXPECTED_OUTPUT_DATA output_array[output_pixel_count]
 
   //============================================================================
   // DUT
@@ -58,8 +58,8 @@ module pooling_layer_test ();
 
   initial begin
     clk = 0; clk_en = 1;
-    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/pooling_layer/input_data.hex", input_channels);
-    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/pooling_layer/output_data.hex", output_channels);
+    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/pooling_layer/input_data.hex", input_array);
+    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/pooling_layer/output_data.hex", output_array);
   end
 
   initial begin

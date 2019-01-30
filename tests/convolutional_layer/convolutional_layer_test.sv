@@ -24,17 +24,13 @@ module convolutional_layer_test ();
   //============================================================================
   // Declarations and data
   //============================================================================
-  reg [D_WIDTH-1:0] c0 [0:total_input_pixels];
-  reg [D_WIDTH-1:0] c1 [0:total_input_pixels];
-  reg [D_WIDTH-1:0] c2 [0:total_input_pixels];
+  reg [D_WIDTH*D_CHANNELS-1:0] input_array [0:total_input_pixels];
+  reg [Q_WIDTH*Q_CHANNELS-1:0] output_array [0:total_output_pixels];
   integer input_pixel_count = 0;
-
-  `define INPUT_DATA {c0[input_pixel_count], c1[input_pixel_count], c2[input_pixel_count]}
-
-  reg [Q_WIDTH-1:0] expected_output [0:total_output_pixels];
   integer output_pixel_count = 0;
 
-  `define EXPECTED_OUTPUT_DATA {Q_CHANNELS{expected_output[output_pixel_count]}}
+  `define INPUT_DATA input_array[input_pixel_count]
+  `define EXPECTED_OUTPUT_DATA output_array[output_pixel_count]
 
   //============================================================================
   // DUT
@@ -69,12 +65,8 @@ module convolutional_layer_test ();
 
   initial begin
     clk = 0; clk_en = 1;
-    // TODO: put in a single file
-    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/channel_0.hex", c0);
-    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/channel_1.hex", c1);
-    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/channel_2.hex", c2);
-
-    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/output_data.hex", expected_output);
+    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/input_data.hex", input_array);
+    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/output_data.hex", output_array);
   end
 
   initial begin
