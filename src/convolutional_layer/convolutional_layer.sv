@@ -4,7 +4,7 @@
 `include "/home/mbyx4np3/COMP30040/COMP30040/src/common/definitions.v"
 `include "/home/mbyx4np3/COMP30040/COMP30040/src/pixel_buffer/pixel_buffer_controller.v"
 `include "/home/mbyx4np3/COMP30040/COMP30040/src/pixel_buffer/pixel_buffer.v"
-`include "/home/mbyx4np3/COMP30040/COMP30040/src/convolutional_layer/inner_product_unit.v"
+`include "/home/mbyx4np3/COMP30040/COMP30040/src/convolutional_layer/inner_product_unit.sv"
 
 module convolutional_layer #(
   parameter D_WIDTH = -1,
@@ -13,7 +13,8 @@ module convolutional_layer #(
   parameter Q_CHANNELS = -1,
   parameter FILTER_SIZE = -1,
   parameter IMAGE_SIZE = -1,
-  parameter STRIDE = 1
+  parameter STRIDE = -1,
+  parameter FILEPATH = -1
 )(
   input wire                           clk,
   input wire                           clk_en,
@@ -22,16 +23,13 @@ module convolutional_layer #(
   output wire                          valid
 );
 
-  // Bits per convolution window
-  parameter CONV_WIDTH = D_WIDTH*FILTER_SIZE*FILTER_SIZE;
-
   // Internal signals / buses
-  wire [CONV_WIDTH-1:0] pixel_buff_out [D_CHANNELS-1:0];
-  wire [Q_WIDTH*Q_CHANNELS-1:0] inner_products [D_CHANNELS-1:0];
-  wire [Q_WIDTH*Q_CHANNELS-1:0] inner_products_sum [D_CHANNELS-1:0];
+  wire [D_WIDTH*(FILTER_SIZE**2)-1:0] pixel_buff_out     [D_CHANNELS-1:0];
+  wire [Q_WIDTH*Q_CHANNELS-1      :0] inner_products     [D_CHANNELS-1:0];
+  wire [Q_WIDTH*Q_CHANNELS-1      :0] inner_products_sum [D_CHANNELS-1:0];
 
-  wire [(`LOG2(IMAGE_SIZE))-1:0] buffer_wr_addr;
-  wire [(`LOG2(IMAGE_SIZE))-1:0] buffer_rd_addr;
+  wire [(`LOG2(IMAGE_SIZE))-1     :0] buffer_wr_addr;
+  wire [(`LOG2(IMAGE_SIZE))-1     :0] buffer_rd_addr;
 
   genvar i;
   genvar j;
@@ -72,9 +70,12 @@ module convolutional_layer #(
     for (i = 0; i < Q_CHANNELS; i = i+1) begin : output_channels
       for (j = 0; j < D_CHANNELS; j = j+1) begin : input_channels
         inner_product_unit #(
-          .SIZE(FILTER_SIZE*FILTER_SIZE),
+          .SIZE(FILTER_SIZE**2),
           .D_WIDTH(D_WIDTH),
-          .Q_WIDTH(Q_WIDTH)
+          .Q_WIDTH(Q_WIDTH),
+          .FILEPATH(FILEPATH),
+          .FILEINDEX_I(i),
+          .FILEINDEX_J(j)
         ) inner_product (
           .input_data(pixel_buff_out[j]),
           .output_data(inner_products[j][`L(Q_WIDTH, i):`R(Q_WIDTH, i)])

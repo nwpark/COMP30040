@@ -16,6 +16,9 @@ module convolutional_layer_test ();
   parameter IMAGE_WIDTH = 64;
   parameter IMAGE_HEIGHT = 32;
   parameter STRIDE = 1;
+  parameter INDEX = 0;
+//  parameter FILEPATH = "/home/mbyx4np3/COMP30040/COMP30040/data/alexnet/layer_0.hex";
+  parameter FILEPATH = "/home/mbyx4np3/COMP30040/COMP30040/data/alexnet/layer_0";
   parameter total_input_pixels = IMAGE_WIDTH*IMAGE_HEIGHT;
   parameter total_output_pixels = (IMAGE_WIDTH-FILTER_SIZE+1)*(IMAGE_HEIGHT-FILTER_SIZE+1);
 
@@ -50,7 +53,8 @@ module convolutional_layer_test ();
     .Q_CHANNELS(Q_CHANNELS),
     .FILTER_SIZE(FILTER_SIZE),
     .IMAGE_SIZE(IMAGE_WIDTH),
-    .STRIDE(STRIDE)
+    .STRIDE(STRIDE),
+    .FILEPATH(FILEPATH)
   ) conv_layer (
     .clk(clk),
     .clk_en(clk_en),
@@ -66,6 +70,7 @@ module convolutional_layer_test ();
 
   initial begin
     clk = 0; clk_en = 1;
+    // TODO: put in a single file
     $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/channel_0.hex", c0);
     $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/channel_1.hex", c1);
     $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/channel_2.hex", c2);
