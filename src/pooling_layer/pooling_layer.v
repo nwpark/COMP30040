@@ -2,8 +2,8 @@
 `define POOL_LAYER
 
 `include "/home/mbyx4np3/COMP30040/COMP30040/src/common/definitions.v"
-`include "/home/mbyx4np3/COMP30040/COMP30040/src/pixel_buffer/pixel_buffer_controller.v"
-`include "/home/mbyx4np3/COMP30040/COMP30040/src/pixel_buffer/pixel_buffer.v"
+`include "/home/mbyx4np3/COMP30040/COMP30040/src/line_buffer/line_buffer_controller.v"
+`include "/home/mbyx4np3/COMP30040/COMP30040/src/line_buffer/line_buffer.v"
 `include "/home/mbyx4np3/COMP30040/COMP30040/src/pooling_layer/max_pooling_unit.v"
 
 module pooling_layer #(
@@ -24,15 +24,15 @@ module pooling_layer #(
   parameter CONV_WIDTH = D_WIDTH*(FILTER_SIZE**2);
 
   // Internal signals / buses
-  wire [CONV_WIDTH-1:0] pixel_buff_out [CHANNELS-1:0];
+  wire [CONV_WIDTH-1:0] line_buff_out [CHANNELS-1:0];
 
   wire [(`LOG2(IMAGE_SIZE))-1:0] buffer_wr_addr;
   wire [(`LOG2(IMAGE_SIZE))-1:0] buffer_rd_addr;
 
   genvar i, j;
 
-  // Pixel buffer controller
-  pixel_buffer_controller #(
+  // Line buffer controller
+  line_buffer_controller #(
     .IMAGE_SIZE(IMAGE_SIZE),
     .FILTER_SIZE(FILTER_SIZE),
     .STRIDE(STRIDE)
@@ -44,27 +44,27 @@ module pooling_layer #(
     .valid(valid)
   );
 
-  // Pixel buffer and max pooling unit for each input channel
+  // Line buffer and max pooling unit for each input channel
   generate
     for (i = 0; i < CHANNELS; i = i+1) begin : pooling
-      pixel_buffer #(
+      line_buffer #(
         .FILTER_SIZE(FILTER_SIZE),
         .IMAGE_SIZE(IMAGE_SIZE),
         .D_WIDTH(D_WIDTH)
-      ) pixel_buff (
+      ) line_buff (
         .clk(clk),
         .clk_en(clk_en),
         .buffer_wr_addr(buffer_wr_addr),
         .buffer_rd_addr(buffer_rd_addr),
         .input_data(input_data[D_WIDTH*i +: D_WIDTH]),
-        .output_data(pixel_buff_out[i])
+        .output_data(line_buff_out[i])
       );
 
       max_pooling_unit #(
         .SIZE(FILTER_SIZE**2),
         .D_WIDTH(D_WIDTH)
       ) max_pool (
-        .input_data(pixel_buff_out[i]),
+        .input_data(line_buff_out[i]),
         .output_data(output_data[D_WIDTH*i +: D_WIDTH])
       );
     end

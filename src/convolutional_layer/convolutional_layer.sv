@@ -2,8 +2,8 @@
 `define CONV_LAYER
 
 `include "/home/mbyx4np3/COMP30040/COMP30040/src/common/definitions.v"
-`include "/home/mbyx4np3/COMP30040/COMP30040/src/pixel_buffer/pixel_buffer_controller.v"
-`include "/home/mbyx4np3/COMP30040/COMP30040/src/pixel_buffer/pixel_buffer.v"
+`include "/home/mbyx4np3/COMP30040/COMP30040/src/line_buffer/line_buffer_controller.v"
+`include "/home/mbyx4np3/COMP30040/COMP30040/src/line_buffer/line_buffer.v"
 `include "/home/mbyx4np3/COMP30040/COMP30040/src/convolutional_layer/inner_product_unit.sv"
 
 module convolutional_layer #(
@@ -24,7 +24,7 @@ module convolutional_layer #(
 );
 
   // Internal signals / buses
-  wire [D_WIDTH*(FILTER_SIZE**2)-1:0] pixel_buff_out     [D_CHANNELS-1:0];
+  wire [D_WIDTH*(FILTER_SIZE**2)-1:0] line_buff_out     [D_CHANNELS-1:0];
   wire [Q_WIDTH*Q_CHANNELS-1      :0] inner_products     [D_CHANNELS-1:0];
   wire [Q_WIDTH*Q_CHANNELS-1      :0] inner_products_sum [D_CHANNELS-1:0];
 
@@ -33,8 +33,8 @@ module convolutional_layer #(
 
   genvar i, j;
 
-  // Pixel buffer controller
-  pixel_buffer_controller #(
+  // Line buffer controller
+  line_buffer_controller #(
     .IMAGE_SIZE(IMAGE_SIZE),
     .FILTER_SIZE(FILTER_SIZE),
     .STRIDE(STRIDE)
@@ -46,20 +46,20 @@ module convolutional_layer #(
     .valid(valid)
   );
 
-  // Pixel buffer for each input channel
+  // Line buffer for each input channel
   generate
     for (i = 0; i < D_CHANNELS; i = i+1) begin : registers
-      pixel_buffer #(
+      line_buffer #(
         .FILTER_SIZE(FILTER_SIZE),
         .IMAGE_SIZE(IMAGE_SIZE),
         .D_WIDTH(D_WIDTH)
-      ) pixel_buff (
+      ) line_buff (
         .clk(clk),
         .clk_en(clk_en),
         .buffer_wr_addr(buffer_wr_addr),
         .buffer_rd_addr(buffer_rd_addr),
         .input_data(input_data[D_WIDTH*i +: D_WIDTH]),
-        .output_data(pixel_buff_out[i])
+        .output_data(line_buff_out[i])
       );
     end
   endgenerate
@@ -76,7 +76,7 @@ module convolutional_layer #(
           .FILEINDEX_I(i),
           .FILEINDEX_J(j)
         ) inner_product (
-          .input_data(pixel_buff_out[j]),
+          .input_data(line_buff_out[j]),
           .output_data(inner_products[j][Q_WIDTH*i +: Q_WIDTH])
         );
       end

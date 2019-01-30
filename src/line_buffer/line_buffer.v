@@ -1,11 +1,11 @@
-`ifndef PIXEL_BUFFER
-`define PIXEL_BUFFER
+`ifndef LINE_BUFFER
+`define LINE_BUFFER
 
 `include "/home/mbyx4np3/COMP30040/COMP30040/src/common/definitions.v"
 `include "/home/mbyx4np3/COMP30040/COMP30040/src/common/block_ram.v"
 `include "/home/mbyx4np3/COMP30040/COMP30040/src/common/register.v"
 
-module pixel_buffer #(
+module line_buffer #(
   parameter FILTER_SIZE = -1,
   parameter IMAGE_SIZE = -1,
   parameter D_WIDTH = -1

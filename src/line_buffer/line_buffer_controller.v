@@ -1,8 +1,8 @@
-`ifndef PIXEL_BUFF_CTRL
-`define PIXEL_BUFF_CTRL
+`ifndef LINE_BUFF_CTRL
+`define LINE_BUFF_CTRL
 
 // TODO: address bus is bigger than it needs to be
-module pixel_buffer_controller #(
+module line_buffer_controller #(
   parameter FILTER_SIZE = -1,
   parameter IMAGE_SIZE = -1,
   parameter STRIDE = -1
