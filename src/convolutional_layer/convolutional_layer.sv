@@ -31,8 +31,7 @@ module convolutional_layer #(
   wire [(`LOG2(IMAGE_SIZE))-1     :0] buffer_wr_addr;
   wire [(`LOG2(IMAGE_SIZE))-1     :0] buffer_rd_addr;
 
-  genvar i;
-  genvar j;
+  genvar i, j;
 
   // Pixel buffer controller
   pixel_buffer_controller #(
@@ -59,7 +58,7 @@ module convolutional_layer #(
         .clk_en(clk_en),
         .buffer_wr_addr(buffer_wr_addr),
         .buffer_rd_addr(buffer_rd_addr),
-        .input_data(input_data[`L(D_WIDTH, i):`R(D_WIDTH, i)]),
+        .input_data(input_data[D_WIDTH*i +: D_WIDTH]),
         .output_data(pixel_buff_out[i])
       );
     end
@@ -78,7 +77,7 @@ module convolutional_layer #(
           .FILEINDEX_J(j)
         ) inner_product (
           .input_data(pixel_buff_out[j]),
-          .output_data(inner_products[j][`L(Q_WIDTH, i):`R(Q_WIDTH, i)])
+          .output_data(inner_products[j][Q_WIDTH*i +: Q_WIDTH])
         );
       end
     end

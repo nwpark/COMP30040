@@ -21,9 +21,9 @@ module max_pooling_unit #(
   generate
     for(i = 0; i < SIZE+1; i=i+1) begin : compare
       assign comparisons[i+1]
-        = comparisons[i] > input_data[`L(D_WIDTH, i+1):`R(D_WIDTH, i+1)]
+        = comparisons[i] > input_data[D_WIDTH*(i+1) +: D_WIDTH]
           ? comparisons[i]
-          : input_data[`L(D_WIDTH, i+1):`R(D_WIDTH, i+1)];
+          : input_data[D_WIDTH*(i+1) +: D_WIDTH];
     end
   endgenerate
 

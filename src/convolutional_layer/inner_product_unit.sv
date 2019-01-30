@@ -36,8 +36,7 @@ module inner_product_unit #(
 
   generate
     for(i = 0; i < SIZE; i=i+1) begin : prods
-      assign products[i] = input_data[`L(D_WIDTH, i):`R(D_WIDTH, i)]
-                           * weights[i];
+      assign products[i] = input_data[D_WIDTH*i +: D_WIDTH] * weights[i];
     end
   endgenerate
 

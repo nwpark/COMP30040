@@ -20,11 +20,10 @@ module pixel_buffer #(
 
   // Internal signals / buses
   wire [D_WIDTH*FILTER_SIZE-1:0] data [FILTER_SIZE-1:0];
-  genvar i;
-  genvar j;
+  genvar i, j;
 
   // Assign input data to input of pixel register
-  assign data[FILTER_SIZE-1][`L(D_WIDTH, FILTER_SIZE-1):`R(D_WIDTH, FILTER_SIZE-1)] = input_data;
+  assign data[FILTER_SIZE-1][D_WIDTH*(FILTER_SIZE-1) +: D_WIDTH] = input_data;
 
   // Registers for each row
   generate
@@ -35,8 +34,8 @@ module pixel_buffer #(
         ) pixel_reg (
           .clk(clk),
           .clk_en(clk_en),
-          .D(data[i][`L(D_WIDTH, j+1):`R(D_WIDTH, j+1)]),
-          .Q(data[i][`L(D_WIDTH, j)  :`R(D_WIDTH, j)])
+          .D(data[i][D_WIDTH*(j+1) +: D_WIDTH]),
+          .Q(data[i][D_WIDTH*(j)   +: D_WIDTH])
         );
       end
     end
@@ -54,7 +53,7 @@ module pixel_buffer #(
         .wr_addr(buffer_wr_addr),
         .wr_data(data[i+1][D_WIDTH-1:0]),
         .rd_addr(buffer_rd_addr),
-        .rd_data(data[i][`L(D_WIDTH, FILTER_SIZE-1):`R(D_WIDTH, FILTER_SIZE-1)])
+        .rd_data(data[i][D_WIDTH*(FILTER_SIZE-1) +: D_WIDTH])
       );
     end
   endgenerate
@@ -62,7 +61,7 @@ module pixel_buffer #(
   // Assign output data
   generate
     for (i = 0; i < FILTER_SIZE; i = i+1) begin : out_data
-      assign output_data[`L(FILTER_SIZE*D_WIDTH, i):`R(FILTER_SIZE*D_WIDTH, i)] = data[i];
+      assign output_data[FILTER_SIZE*D_WIDTH*i +: FILTER_SIZE*D_WIDTH] = data[i];
     end
   endgenerate
 
