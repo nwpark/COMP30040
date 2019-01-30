@@ -10,6 +10,8 @@ module alexnet (
   output wire output_data,
 );
 
+  // These are just dummy layers (not actually alexnet)
+
   convolutional_layer #(
     .D_WIDTH(8),
     .Q_WIDTH(16),

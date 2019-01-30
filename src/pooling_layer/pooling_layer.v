@@ -20,16 +20,13 @@ module pooling_layer #(
   output wire                        valid
 );
 
-  // Bits per convolution window
-  parameter CONV_WIDTH = D_WIDTH*(FILTER_SIZE**2);
-
   // Internal signals / buses
-  wire [CONV_WIDTH-1:0] line_buff_out [CHANNELS-1:0];
+  wire [D_WIDTH*(FILTER_SIZE**2)-1:0] line_buff_out [CHANNELS-1:0];
 
-  wire [(`LOG2(IMAGE_SIZE))-1:0] buffer_wr_addr;
-  wire [(`LOG2(IMAGE_SIZE))-1:0] buffer_rd_addr;
+  wire [(`LOG2(IMAGE_SIZE))-1     :0] buffer_wr_addr;
+  wire [(`LOG2(IMAGE_SIZE))-1     :0] buffer_rd_addr;
 
-  genvar i, j;
+  genvar i;
 
   // Line buffer controller
   line_buffer_controller #(
