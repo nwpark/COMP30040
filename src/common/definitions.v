@@ -5,8 +5,8 @@
 `define R(bits,i) ((bits)*(i))
 
 `define BITS 8
-`define D_WIDTH 8
-`define Q_WIDTH 16
+`define I_WIDTH 8
+`define O_WIDTH 16
 
 // Number of pixel data addresses on each row of the display
 `define ADDRESSES_PER_ROW 160

@@ -35,7 +35,7 @@ input = (256 * np.random.random((3, 32, 64))).astype(int) - 128
 result = np.zeros((5, 28, 60)).astype(int)
 
 np.random.seed(1)
-filter = (32 * np.random.random((5,5))).astype(int) - 16
+filter = (64 * np.random.random((5,5))).astype(int) - 32
 
 for out_channel in range(0, result.shape[0]):
   for in_channel in range(0, input.shape[0]):

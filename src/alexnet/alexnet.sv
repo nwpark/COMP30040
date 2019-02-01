@@ -18,10 +18,10 @@ module alexnet (
 
   // Convolutional layer
   convolutional_layer #(
-    .D_WIDTH(8),
-    .Q_WIDTH(16),
-    .D_CHANNELS(3),
-    .Q_CHANNELS(5),
+    .I_WIDTH(8),
+    .O_WIDTH(16),
+    .CHANNELS_IN(3),
+    .CHANNELS_OUT(5),
     .FILTER_SIZE(2),
     .IMAGE_SIZE(256),
     .STRIDE(1),
@@ -36,7 +36,7 @@ module alexnet (
 
   // Relu layer
   relu_layer #(
-    .D_WIDTH(16),
+    .I_WIDTH(16),
     .CHANNELS(5)
   ) layer_1 (
     .input_data(layer_0_output),
@@ -45,7 +45,7 @@ module alexnet (
 
   // Pooling layer
   pooling_layer #(
-    .D_WIDTH(8),
+    .I_WIDTH(8),
     .CHANNELS(5),
     .FILTER_SIZE(2),
     .IMAGE_SIZE(254),

@@ -5,25 +5,25 @@
 
 module max_pooling_unit #(
   parameter SIZE = -1,
-  parameter D_WIDTH = -1
+  parameter I_WIDTH = -1
 )(
-  input  wire [D_WIDTH*SIZE-1:0] input_data,
-  output wire [D_WIDTH-1     :0] output_data
+  input  wire [I_WIDTH*SIZE-1:0] input_data,
+  output wire [I_WIDTH-1     :0] output_data
 );
 
   genvar i;
 
-  wire [D_WIDTH-1:0] comparisons [SIZE-1:0];
+  wire [I_WIDTH-1:0] comparisons [SIZE-1:0];
 
-  assign comparisons[0] = input_data[D_WIDTH-1:0];
+  assign comparisons[0] = input_data[I_WIDTH-1:0];
 
   // Generate comparator tree
   generate
     for(i = 0; i < SIZE+1; i=i+1) begin : compare
       assign comparisons[i+1]
-        = comparisons[i] > input_data[D_WIDTH*(i+1) +: D_WIDTH]
+        = comparisons[i] > input_data[I_WIDTH*(i+1) +: I_WIDTH]
           ? comparisons[i]
-          : input_data[D_WIDTH*(i+1) +: D_WIDTH];
+          : input_data[I_WIDTH*(i+1) +: I_WIDTH];
     end
   endgenerate
 

@@ -7,10 +7,10 @@
 `include "/home/mbyx4np3/COMP30040/COMP30040/src/convolutional_layer/inner_product_unit.sv"
 
 module convolutional_layer #(
-  parameter D_WIDTH = -1,
-  parameter Q_WIDTH = -1,
-  parameter D_CHANNELS = -1,
-  parameter Q_CHANNELS = -1,
+  parameter I_WIDTH = -1,
+  parameter O_WIDTH = -1,
+  parameter CHANNELS_IN = -1,
+  parameter CHANNELS_OUT = -1,
   parameter FILTER_SIZE = -1,
   parameter IMAGE_SIZE = -1,
   parameter STRIDE = -1,
@@ -18,15 +18,15 @@ module convolutional_layer #(
 )(
   input wire                           clk,
   input wire                           clk_en,
-  input wire  [D_WIDTH*D_CHANNELS-1:0] input_data,
-  output wire [Q_WIDTH*Q_CHANNELS-1:0] output_data,
+  input wire  [I_WIDTH*CHANNELS_IN-1:0] input_data,
+  output wire [O_WIDTH*CHANNELS_OUT-1:0] output_data,
   output wire                          valid
 );
 
   // Internal signals / buses
-  wire [D_WIDTH*(FILTER_SIZE**2)-1:0] line_buff_out      [D_CHANNELS-1:0];
-  wire [Q_WIDTH*Q_CHANNELS-1      :0] inner_products     [D_CHANNELS-1:0];
-  wire [Q_WIDTH*Q_CHANNELS-1      :0] inner_products_sum [D_CHANNELS-1:0];
+  wire [I_WIDTH*(FILTER_SIZE**2)-1:0] line_buff_out      [CHANNELS_IN-1:0];
+  wire [O_WIDTH*CHANNELS_OUT-1      :0] inner_products     [CHANNELS_IN-1:0];
+  wire [O_WIDTH*CHANNELS_OUT-1      :0] inner_products_sum [CHANNELS_IN-1:0];
 
   wire [(`LOG2(IMAGE_SIZE))-1     :0] buffer_wr_addr;
   wire [(`LOG2(IMAGE_SIZE))-1     :0] buffer_rd_addr;
@@ -48,17 +48,17 @@ module convolutional_layer #(
 
   // Line buffer for each input channel
   generate
-    for (i = 0; i < D_CHANNELS; i = i+1) begin : registers
+    for (i = 0; i < CHANNELS_IN; i = i+1) begin : registers
       line_buffer #(
         .FILTER_SIZE(FILTER_SIZE),
         .IMAGE_SIZE(IMAGE_SIZE),
-        .D_WIDTH(D_WIDTH)
+        .I_WIDTH(I_WIDTH)
       ) line_buff (
         .clk(clk),
         .clk_en(clk_en),
         .buffer_wr_addr(buffer_wr_addr),
         .buffer_rd_addr(buffer_rd_addr),
-        .input_data(input_data[D_WIDTH*i +: D_WIDTH]),
+        .input_data(input_data[I_WIDTH*i +: I_WIDTH]),
         .output_data(line_buff_out[i])
       );
     end
@@ -66,18 +66,18 @@ module convolutional_layer #(
 
   // Inner product units for each output channel
   generate
-    for (i = 0; i < Q_CHANNELS; i = i+1) begin : output_channels
-      for (j = 0; j < D_CHANNELS; j = j+1) begin : input_channels
+    for (i = 0; i < CHANNELS_OUT; i = i+1) begin : output_channels
+      for (j = 0; j < CHANNELS_IN; j = j+1) begin : input_channels
         inner_product_unit #(
           .SIZE(FILTER_SIZE**2),
-          .D_WIDTH(D_WIDTH),
-          .Q_WIDTH(Q_WIDTH),
+          .I_WIDTH(I_WIDTH),
+          .O_WIDTH(O_WIDTH),
           .FILEPATH(FILEPATH),
           .FILEINDEX_I(i),
           .FILEINDEX_J(j)
         ) inner_product (
           .input_data(line_buff_out[j]),
-          .output_data(inner_products[j][Q_WIDTH*i +: Q_WIDTH])
+          .output_data(inner_products[j][O_WIDTH*i +: O_WIDTH])
         );
       end
     end
@@ -86,15 +86,15 @@ module convolutional_layer #(
   // Adder tree for inner product units
   assign inner_products_sum[0] = inner_products[0];
   generate
-    for(i = 0; i < D_CHANNELS-1; i=i+1) begin : input_channels
-      for(j = 0; j < Q_CHANNELS; j=j+1) begin : output_channels
-        assign inner_products_sum[i+1][Q_WIDTH*j +: Q_WIDTH]
-          = inner_products_sum[i][Q_WIDTH*j +: Q_WIDTH]
-            + inner_products[i+1][Q_WIDTH*j +: Q_WIDTH];
+    for(i = 0; i < CHANNELS_IN-1; i=i+1) begin : input_channels
+      for(j = 0; j < CHANNELS_OUT; j=j+1) begin : output_channels
+        assign inner_products_sum[i+1][O_WIDTH*j +: O_WIDTH]
+          = inner_products_sum[i][O_WIDTH*j +: O_WIDTH]
+            + inner_products[i+1][O_WIDTH*j +: O_WIDTH];
       end
     end
   endgenerate
-  assign output_data = inner_products_sum[D_CHANNELS-1];
+  assign output_data = inner_products_sum[CHANNELS_IN-1];
 
 endmodule
 

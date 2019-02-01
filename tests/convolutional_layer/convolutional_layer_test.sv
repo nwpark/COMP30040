@@ -8,10 +8,10 @@ module convolutional_layer_test ();
   //============================================================================
   // Test Parameters
   //============================================================================
-  parameter D_WIDTH = 8;
-  parameter Q_WIDTH = 16;
-  parameter D_CHANNELS = 3;
-  parameter Q_CHANNELS = 5;
+  parameter I_WIDTH = 8;
+  parameter O_WIDTH = 16;
+  parameter CHANNELS_IN = 3;
+  parameter CHANNELS_OUT = 5;
   parameter FILTER_SIZE = 5;
   parameter IMAGE_WIDTH = 64;
   parameter IMAGE_HEIGHT = 32;
@@ -24,8 +24,8 @@ module convolutional_layer_test ();
   //============================================================================
   // Declarations and data
   //============================================================================
-  reg [D_WIDTH*D_CHANNELS-1:0] input_array [0:total_input_pixels];
-  reg [Q_WIDTH*Q_CHANNELS-1:0] output_array [0:total_output_pixels];
+  reg [I_WIDTH*CHANNELS_IN-1:0] input_array [0:total_input_pixels];
+  reg [O_WIDTH*CHANNELS_OUT-1:0] output_array [0:total_output_pixels];
   integer input_pixel_count = 0;
   integer output_pixel_count = 0;
 
@@ -37,15 +37,15 @@ module convolutional_layer_test ();
   //============================================================================
   reg  clk;
   reg  clk_en;
-  reg  [D_CHANNELS*D_WIDTH-1:0] input_data;
-  wire [Q_CHANNELS*Q_WIDTH-1:0] output_data;
+  reg  [CHANNELS_IN*I_WIDTH-1:0] input_data;
+  wire [CHANNELS_OUT*O_WIDTH-1:0] output_data;
   wire valid;
 
   convolutional_layer #(
-    .D_WIDTH(D_WIDTH),
-    .Q_WIDTH(Q_WIDTH),
-    .D_CHANNELS(D_CHANNELS),
-    .Q_CHANNELS(Q_CHANNELS),
+    .I_WIDTH(I_WIDTH),
+    .O_WIDTH(O_WIDTH),
+    .CHANNELS_IN(CHANNELS_IN),
+    .CHANNELS_OUT(CHANNELS_OUT),
     .FILTER_SIZE(FILTER_SIZE),
     .IMAGE_SIZE(IMAGE_WIDTH),
     .STRIDE(STRIDE),

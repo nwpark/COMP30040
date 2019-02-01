@@ -8,15 +8,15 @@ module relu_layer_test ();
   //============================================================================
   // Test Parameters
   //============================================================================
-  parameter D_WIDTH = 8;
+  parameter I_WIDTH = 8;
   parameter CHANNELS = 3;
   parameter total_pixels = 2048;
 
   //============================================================================
   // Declarations and data
   //============================================================================
-  reg [D_WIDTH*CHANNELS-1:0] input_array [0:total_pixels];
-  reg [D_WIDTH*CHANNELS-1:0] output_array [0:total_pixels];
+  reg [I_WIDTH*CHANNELS-1:0] input_array [0:total_pixels];
+  reg [I_WIDTH*CHANNELS-1:0] output_array [0:total_pixels];
   integer pixel_count = 0;
 
   `define INPUT_DATA input_array[pixel_count]
@@ -26,13 +26,13 @@ module relu_layer_test ();
   // DUT
   //============================================================================
   reg  clk;
-  wire [D_WIDTH*CHANNELS-1:0] input_data;
-  wire [D_WIDTH*CHANNELS-1:0] output_data;
+  wire [I_WIDTH*CHANNELS-1:0] input_data;
+  wire [I_WIDTH*CHANNELS-1:0] output_data;
 
   assign input_data = `INPUT_DATA;
 
   relu_layer #(
-    .D_WIDTH(D_WIDTH),
+    .I_WIDTH(I_WIDTH),
     .CHANNELS(CHANNELS)
   ) relu_layer (
     .input_data(input_data),

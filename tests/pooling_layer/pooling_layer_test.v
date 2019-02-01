@@ -8,7 +8,7 @@ module pooling_layer_test ();
   //============================================================================
   // Test Parameters
   //============================================================================
-  parameter D_WIDTH = 8;
+  parameter I_WIDTH = 8;
   parameter CHANNELS = 3;
   parameter FILTER_SIZE = 2;
   parameter IMAGE_WIDTH = 64;
@@ -20,8 +20,8 @@ module pooling_layer_test ();
   //============================================================================
   // Declarations and data
   //============================================================================
-  reg [D_WIDTH*CHANNELS-1:0] input_array [0:total_input_pixels];
-  reg [D_WIDTH*CHANNELS-1:0] output_array [0:total_output_pixels];
+  reg [I_WIDTH*CHANNELS-1:0] input_array [0:total_input_pixels];
+  reg [I_WIDTH*CHANNELS-1:0] output_array [0:total_output_pixels];
   integer input_pixel_count = 0;
   integer output_pixel_count = 0;
 
@@ -33,12 +33,12 @@ module pooling_layer_test ();
   //============================================================================
   reg  clk;
   reg  clk_en;
-  reg  [CHANNELS*D_WIDTH-1:0] input_data;
-  wire [CHANNELS*D_WIDTH-1:0] output_data;
+  reg  [CHANNELS*I_WIDTH-1:0] input_data;
+  wire [CHANNELS*I_WIDTH-1:0] output_data;
   wire valid;
 
   pooling_layer #(
-    .D_WIDTH(D_WIDTH),
+    .I_WIDTH(I_WIDTH),
     .CHANNELS(CHANNELS),
     .FILTER_SIZE(FILTER_SIZE),
     .IMAGE_SIZE(IMAGE_WIDTH),

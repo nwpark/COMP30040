@@ -24,7 +24,7 @@ def printArray(array, file):
 
 
 np.random.seed(1)
-filter = (32 * np.random.random((5,5))).astype(int) - 16
+filter = (64 * np.random.random((5,5))).astype(int) - 32
 
 printArray(filter, "0.hex")
 
