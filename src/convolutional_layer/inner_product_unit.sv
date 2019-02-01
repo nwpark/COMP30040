@@ -11,18 +11,17 @@ module inner_product_unit #(
   parameter FILEINDEX_I = -1,
   parameter FILEINDEX_J = -1
 )(
-  input  wire [D_WIDTH*SIZE-1:0] input_data,
-  output wire [Q_WIDTH-1     :0] output_data
+  input  wire        [D_WIDTH*SIZE-1:0] input_data,
+  output wire signed [Q_WIDTH-1     :0] output_data
 );
 
-  reg  [70*8     :0] fpath;
-  string             file_i;
-  string             file_j;
+  string       file_i;
+  string       file_j;
+  reg [70*8:0] fpath;
 
-  reg  [D_WIDTH-1:0] weights [SIZE-1:0];
-
-  wire [D_WIDTH-1:0] products     [SIZE-1:0];
-  wire [Q_WIDTH-1:0] products_sum [SIZE-1:0];
+  reg  signed [D_WIDTH-1:0] weights      [SIZE-1:0];
+  wire signed [D_WIDTH-1:0] products     [SIZE-1:0];
+  wire signed [Q_WIDTH-1:0] products_sum [SIZE-1:0];
 
   genvar i;
 
@@ -36,7 +35,9 @@ module inner_product_unit #(
 
   generate
     for(i = 0; i < SIZE; i=i+1) begin : prods
-      assign products[i] = input_data[D_WIDTH*i +: D_WIDTH] * weights[i];
+      wire signed [D_WIDTH-1:0] val = input_data[D_WIDTH*i +: D_WIDTH];
+//      assign products[i] = val;
+      assign products[i] = val * weights[i];
     end
   endgenerate
 

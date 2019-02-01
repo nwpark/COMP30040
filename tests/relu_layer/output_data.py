@@ -30,18 +30,9 @@ channel_1 = (256 * np.random.random((32, 64))).astype(int)
 np.random.seed(2)
 channel_2 = (256 * np.random.random((32, 64))).astype(int)
 
-
-# c0_out = [0 if n > 127 for n in channel_0]
-# c1_out = [0 if n > 127 for n in channel_1]
-# c2_out = [0 if n > 127 for n in channel_2]
-
 channel_0[channel_0 > 127] = 0
 channel_1[channel_1 > 127] = 0
 channel_2[channel_2 > 127] = 0
-
-# c0_out = np.maximum(channel_0,0)
-# c1_out = np.maximum(channel_1,0)
-# c2_out = np.maximum(channel_2,0)
 
 data = (channel_0 << 16) + (channel_1 << 8) + channel_2
 printArray(data, file='output_data.hex')

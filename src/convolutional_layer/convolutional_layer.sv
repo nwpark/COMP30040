@@ -24,7 +24,7 @@ module convolutional_layer #(
 );
 
   // Internal signals / buses
-  wire [D_WIDTH*(FILTER_SIZE**2)-1:0] line_buff_out     [D_CHANNELS-1:0];
+  wire [D_WIDTH*(FILTER_SIZE**2)-1:0] line_buff_out      [D_CHANNELS-1:0];
   wire [Q_WIDTH*Q_CHANNELS-1      :0] inner_products     [D_CHANNELS-1:0];
   wire [Q_WIDTH*Q_CHANNELS-1      :0] inner_products_sum [D_CHANNELS-1:0];
 
@@ -87,7 +87,11 @@ module convolutional_layer #(
   assign inner_products_sum[0] = inner_products[0];
   generate
     for(i = 0; i < D_CHANNELS-1; i=i+1) begin : input_channels
-      assign inner_products_sum[i+1] = inner_products_sum[i] + inner_products[i+1];
+      for(j = 0; j < Q_CHANNELS; j=j+1) begin : output_channels
+        assign inner_products_sum[i+1][Q_WIDTH*j +: Q_WIDTH]
+          = inner_products_sum[i][Q_WIDTH*j +: Q_WIDTH]
+            + inner_products[i+1][Q_WIDTH*j +: Q_WIDTH];
+      end
     end
   endgenerate
   assign output_data = inner_products_sum[D_CHANNELS-1];

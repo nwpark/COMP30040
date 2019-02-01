@@ -13,22 +13,20 @@ def int2hex(number):
   return hexval.split('x')[-1].split('L')[0][:]
 
 
+def int2str(val, bits=8):
+  return str(int2hex(val)).zfill(bits/4)
+
 def printArray(array, file):
   with open(file, 'w') as fh:
-    for y in range(array.shape[0]):
-      for x in range(array.shape[1]):
-        print(int2hex(array[y,x]), end=" ", file=fh)
+    for y in range(array.shape[1]):
+      for x in range(array.shape[2]):
+        val = ''
+        for z in range(array.shape[0]):
+          val = val + int2str(array[z,y,x])
+        print(val, end=" ", file=fh)
       print(file=fh)
 
 
 np.random.seed(0)
-channel_0 = (32 * np.random.random((32, 64))).astype(int)
-
-np.random.seed(1)
-channel_1 = (32 * np.random.random((32, 64))).astype(int)
-
-np.random.seed(2)
-channel_2 = (32 * np.random.random((32, 64))).astype(int)
-
-data = (channel_0 << 16) + (channel_1 << 8) + channel_2
-printArray(data, file='input_data.hex')
+image = (256 * np.random.random((3, 32, 64))).astype(int) - 128
+printArray(image, file='input_data.hex')

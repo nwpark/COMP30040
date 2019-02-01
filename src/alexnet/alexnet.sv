@@ -4,14 +4,19 @@
 `include "/home/mbyx4np3/COMP30040/COMP30040/src/common/definitions.v"
 
 module alexnet (
-  input wire  clk,
-  input wire  clk_en,
-  input wire  input_data,
-  output wire output_data,
+  input wire         clk,
+  input wire         clk_en,
+  input wire  [48:0] input_data,
+  output wire [80:0] output_data,
+  output wire        valid
 );
 
-  // These are just dummy layers (not actually alexnet)
+  // Internal signals / buses
+  wire [80:0] layer_0_output;
+  wire        layer_0_valid;
+  wire [80:0] layer_1_output;
 
+  // Convolutional layer
   convolutional_layer #(
     .D_WIDTH(8),
     .Q_WIDTH(16),
@@ -25,20 +30,30 @@ module alexnet (
     .clk(clk),
     .clk_en(clk_en),
     .input_data(input_data),
-    .output_data(output_data),
-    .valid(valid)
+    .output_data(layer_0_output),
+    .valid(layer_0_valid)
   );
 
+  // Relu layer
+  relu_layer #(
+    .D_WIDTH(16),
+    .CHANNELS(5)
+  ) layer_1 (
+    .input_data(layer_0_output),
+    .output_data(layer_1_output)
+  );
+
+  // Pooling layer
   pooling_layer #(
-    .D_WIDTH(D_WIDTH),
-    .CHANNELS(CHANNELS),
-    .FILTER_SIZE(FILTER_SIZE),
-    .IMAGE_SIZE(IMAGE_WIDTH),
-    .STRIDE(STRIDE)
-  ) pool_layer (
+    .D_WIDTH(8),
+    .CHANNELS(5),
+    .FILTER_SIZE(2),
+    .IMAGE_SIZE(254),
+    .STRIDE(2)
+  ) layer_2 (
     .clk(clk),
-    .clk_en(clk_en),
-    .input_data(input_data),
+    .clk_en(layer_0_valid),
+    .input_data(layer_1_output),
     .output_data(output_data),
     .valid(valid)
   );
