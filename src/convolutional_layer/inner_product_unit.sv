@@ -20,7 +20,7 @@ module inner_product_unit #(
   reg [70*8:0] fpath;
 
   reg  signed [D_WIDTH-1:0] weights      [SIZE-1:0];
-  wire signed [D_WIDTH-1:0] products     [SIZE-1:0];
+  wire signed [Q_WIDTH-1:0] products     [SIZE-1:0];
   wire signed [Q_WIDTH-1:0] products_sum [SIZE-1:0];
 
   genvar i;
