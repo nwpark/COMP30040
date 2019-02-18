@@ -16,7 +16,6 @@ module convolutional_layer_test ();
   parameter IMAGE_WIDTH = 64;
   parameter IMAGE_HEIGHT = 32;
   parameter STRIDE = 1;
-  parameter INDEX = 0;
   parameter FILEPATH = "/home/mbyx4np3/COMP30040/COMP30040/data/alexnet/layer_0";
   parameter total_input_pixels = IMAGE_WIDTH*IMAGE_HEIGHT;
   parameter total_output_pixels = (IMAGE_WIDTH-FILTER_SIZE+1)*(IMAGE_HEIGHT-FILTER_SIZE+1);
