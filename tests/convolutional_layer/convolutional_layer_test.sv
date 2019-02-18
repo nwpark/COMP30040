@@ -15,10 +15,10 @@ module convolutional_layer_test ();
   parameter FILTER_SIZE = 5;
   parameter IMAGE_WIDTH = 64;
   parameter IMAGE_HEIGHT = 32;
-  parameter STRIDE = 1;
+  parameter STRIDE = 4;
   parameter FILEPATH = "/home/mbyx4np3/COMP30040/COMP30040/data/alexnet/layer_0";
   parameter total_input_pixels = IMAGE_WIDTH*IMAGE_HEIGHT;
-  parameter total_output_pixels = (IMAGE_WIDTH-FILTER_SIZE+1)*(IMAGE_HEIGHT-FILTER_SIZE+1);
+  parameter total_output_pixels = ((IMAGE_WIDTH-FILTER_SIZE+1)/STRIDE)*((IMAGE_HEIGHT-FILTER_SIZE+1)/STRIDE);
 
   //============================================================================
   // Declarations and data
@@ -78,7 +78,7 @@ module convolutional_layer_test ();
   // FSM to Test the Unit
   //============================================================================
   always @ (posedge clk) begin
-    if (input_pixel_count > total_input_pixels) begin
+    if (input_pixel_count > total_input_pixels || output_pixel_count >= total_output_pixels) begin
       assertEquals32(output_pixel_count, total_output_pixels, "Incorrect number of pixels output");
       completeSimulation();
     end

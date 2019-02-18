@@ -6,7 +6,7 @@ import scipy.signal as sp
 
 
 f_size = 5
-stride = 1
+stride = 4
 in_width = 64
 in_height = 32
 out_width = (in_width - (f_size-1)) / stride

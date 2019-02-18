@@ -49,7 +49,7 @@ module line_buffer_controller #(
         y <= y+1;
 
         // Update stride_y
-        if (stride_y == STRIDE-1) stride_y <= 0;
+        if (stride_y == STRIDE-1 || y < FILTER_SIZE-1) stride_y <= 0;
         else stride_y <= stride_y + 1;
       end
       else begin
@@ -57,14 +57,14 @@ module line_buffer_controller #(
       end
 
       // Update stride_x
-      if (stride_x == STRIDE-1) stride_x <= 0;
+      if (stride_x == STRIDE-1 || x < FILTER_SIZE-1) stride_x <= 0;
       else stride_x <= stride_x + 1;
 
       // Determine validity
       valid <= (y >= FILTER_SIZE-1)
-            && (x >= FILTER_SIZE-1)
-            && (stride_x == STRIDE-1)
-            && (stride_y == STRIDE-1);
+        && (x >= FILTER_SIZE-1)
+        && (stride_x == 0)
+        && (stride_y == 0);
     end
   end
 
