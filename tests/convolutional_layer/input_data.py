@@ -2,31 +2,17 @@
 
 from __future__ import print_function
 import numpy as np
+import sys
+sys.path.insert(0, '..')
+from utils import *
 
 
-def int2hex(number):
-  bits = 8
-  if number < 0:
-    hexval = hex((1 << bits) + number)
-  else:
-    hexval = hex(number)
-  return hexval.split('x')[-1].split('L')[0][:]
-
-
-def int2str(val, bits=8):
-  return str(int2hex(val)).zfill(bits/4)
-
-def printArray(array, file):
-  with open(file, 'w') as fh:
-    for y in range(array.shape[1]):
-      for x in range(array.shape[2]):
-        val = ''
-        for z in range(array.shape[0]):
-          val = val + int2str(array[z,y,x])
-        print(val, end=" ", file=fh)
-      print(file=fh)
+width = 64
+height = 32
+channels = 3
+bits = 8
 
 
 np.random.seed(0)
-image = (256 * np.random.random((3, 32, 64))).astype(int) - 128
-printArray(image, file='input_data.hex')
+image = (256 * np.random.random((channels, height, width))).astype(int) - 128
+print_hex_array3d(image, 'input_data.hex', bits)
