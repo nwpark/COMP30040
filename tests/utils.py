@@ -44,3 +44,20 @@ def print_hex_array2d(array, file, bits=8):
 
 def flip_array(array):
   return np.flipud(np.fliplr(array))
+
+
+def read_filter_weights(out_channels=5, in_channels=3, f_size=5):
+  filters = np.empty((out_channels, in_channels, f_size, f_size)).astype(int)
+  for out_channel in range(0, out_channels):
+    for in_channel in range(0, in_channels):
+      with open("../../data/cnn/layer_0/filter_{}_{}.hex".format(out_channel, in_channel)) as fh:
+        weights = fh.read().splitlines()
+        weights = map(lambda x: hex2int(x), weights)
+        weights = np.asarray(weights).reshape((f_size, f_size))
+        filters[out_channel,in_channel] = flip_array(weights)
+  return filters
+
+
+def create_input_image(channels=3, height=32, width=64):
+  np.random.seed(0)
+  return (256 * np.random.random((channels, height, width))).astype(int) - 128

@@ -16,17 +16,17 @@ module convolutional_layer #(
   parameter STRIDE = -1,
   parameter FILEPATH = -1
 )(
-  input wire                           clk,
-  input wire                           clk_en,
-  input wire  [I_WIDTH*CHANNELS_IN-1:0] input_data,
+  input wire                             clk,
+  input wire                             clk_en,
+  input wire  [I_WIDTH*CHANNELS_IN-1 :0] input_data,
   output wire [O_WIDTH*CHANNELS_OUT-1:0] output_data,
-  output wire                          valid
+  output wire                            valid
 );
 
   // Internal signals / buses
   wire [I_WIDTH*(FILTER_SIZE**2)-1:0] line_buff_out      [CHANNELS_IN-1:0];
-  wire [O_WIDTH*CHANNELS_OUT-1      :0] inner_products     [CHANNELS_IN-1:0];
-  wire [O_WIDTH*CHANNELS_OUT-1      :0] inner_products_sum [CHANNELS_IN-1:0];
+  wire [O_WIDTH*CHANNELS_OUT-1    :0] inner_products     [CHANNELS_IN-1:0];
+  wire [O_WIDTH*CHANNELS_OUT-1    :0] inner_products_sum [CHANNELS_IN-1:0];
 
   wire [(`LOG2(IMAGE_SIZE))-1     :0] buffer_wr_addr;
   wire [(`LOG2(IMAGE_SIZE))-1     :0] buffer_rd_addr;

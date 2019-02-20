@@ -1,20 +1,19 @@
-`ifndef ALEXNET
-`define ALEXNET
+`ifndef CNN
+`define CNN
 
 `include "/home/mbyx4np3/COMP30040/COMP30040/src/common/definitions.v"
 
-module alexnet (
+module cnn (
   input wire         clk,
   input wire         clk_en,
-  input wire  [48:0] input_data,
-  output wire [80:0] output_data,
+  input wire  [23:0] input_data,
+  output wire [79:0] output_data,
   output wire        valid
 );
 
-  // Internal signals / buses
-  wire [80:0] layer_0_output;
+  wire [79:0] layer_0_output;
+  wire [79:0] layer_1_output;
   wire        layer_0_valid;
-  wire [80:0] layer_1_output;
 
   // Convolutional layer
   convolutional_layer #(
@@ -22,9 +21,9 @@ module alexnet (
     .O_WIDTH(16),
     .CHANNELS_IN(3),
     .CHANNELS_OUT(5),
-    .FILTER_SIZE(2),
-    .IMAGE_SIZE(256),
-    .STRIDE(1),
+    .FILTER_SIZE(5),
+    .IMAGE_SIZE(64),
+    .STRIDE(4),
     .FILEPATH("/home/mbyx4np3/COMP30040/COMP30040/data/alexnet/layer_0")
   ) layer_0 (
     .clk(clk),
@@ -45,7 +44,7 @@ module alexnet (
 
   // Pooling layer
   pooling_layer #(
-    .I_WIDTH(8),
+    .I_WIDTH(16),
     .CHANNELS(5),
     .FILTER_SIZE(2),
     .IMAGE_SIZE(254),
