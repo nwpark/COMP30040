@@ -27,10 +27,7 @@ def convolve(array, filter):
   return res
 
 
-# Read filter weights from files
 filters = read_filter_weights()
-
-# Generate random input image
 input = create_input_image()
 
 # Initialize array to hold result
