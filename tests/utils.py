@@ -104,3 +104,14 @@ def convolve3d(array, filters, stride):
     for in_channel in range(0, in_channels):
       result[out_channel] = result[out_channel] + convolve(array[in_channel], filters[out_channel, in_channel], stride)
   return result
+
+
+def maxpooling(array, stride):
+  out_height = array.shape[1] / stride
+  out_width = array.shape[2] / stride
+  result = np.zeros((array.shape[0], out_height, out_width)).astype(int)
+  for z in range(0, array.shape[0]):
+    for y in range(0, out_height):
+      for x in range(0, out_width):
+        result[z,y,x] = np.max(array[z,y*stride:(y+1)*stride,x*stride:(x+1)*stride])
+  return result

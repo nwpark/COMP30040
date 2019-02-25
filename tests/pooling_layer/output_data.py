@@ -7,30 +7,17 @@ sys.path.insert(0, '..')
 from utils import *
 
 
-def maxpooling(array):
-  # reshape each row into groups of 2 (horizontally adjacent)
-  a=array.reshape(32,32,2)
-  # take maximum from each group of 2
-  a=np.amax(a, axis=2)
-  # reshape each row into groups of 2 rows (to get vertically adjacent pixels)
-  a=a.reshape(16,2,32)
-  # element wise maximum for each group of 2 rows
-  a=np.maximum(a[:,0],a[:,1])
-  return a
+# Parameters
+stride = 2
+in_width = 64
+in_height = 32
+in_channels = 3
+bits = 8
 
 
 np.random.seed(0)
-channel_0 = (32 * np.random.random((32, 64))).astype(int)
+input = (32 * np.random.random((in_channels, in_height, in_width))).astype(int)
 
-np.random.seed(1)
-channel_1 = (32 * np.random.random((32, 64))).astype(int)
+result = maxpooling(input, stride)
 
-np.random.seed(2)
-channel_2 = (32 * np.random.random((32, 64))).astype(int)
-
-c0_out = maxpooling(channel_0)
-c1_out = maxpooling(channel_1)
-c2_out = maxpooling(channel_2)
-
-data = (c0_out << 16) + (c1_out << 8) + c2_out
-print_hex_array2d(data, 'output_data.hex', 8)
+print_hex_array3d(result, 'output_data.hex', bits)
