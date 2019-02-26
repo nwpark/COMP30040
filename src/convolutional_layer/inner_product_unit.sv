@@ -36,7 +36,6 @@ module inner_product_unit #(
   generate
     for(i = 0; i < SIZE; i=i+1) begin : prods
       wire signed [I_WIDTH-1:0] val = input_data[I_WIDTH*i +: I_WIDTH];
-//      assign products[i] = val;
       assign products[i] = val * weights[i];
     end
   endgenerate

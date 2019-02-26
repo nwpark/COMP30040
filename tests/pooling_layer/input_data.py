@@ -8,15 +8,12 @@ from utils import *
 
 
 # Parameters
-stride = 2
 in_width = 64
 in_height = 32
 in_channels = 3
 bits = 8
 
 
-np.random.seed(0)
-input = (32 * np.random.random((in_channels, in_height, in_width))).astype(int)
-
+input = create_input_image(in_channels, in_height, in_width)
 
 print_hex_array3d(input, 'input_data.hex', bits)
