@@ -13,6 +13,7 @@ channels = 3
 bits = 8
 
 
-np.random.seed(0)
-image = (256 * np.random.random((channels, height, width))).astype(int) - 128
+image = create_input_image(channels, height, width)
+
+# Print result to file
 print_hex_array3d(image, 'input_data.hex', bits)

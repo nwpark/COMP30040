@@ -14,11 +14,9 @@ in_height = 32
 in_channels = 3
 bits = 16
 
-# Read filter weights from file
-filters = read_filter_weights()
-# Generate input image
+
 input = create_input_image(in_channels, in_height, in_width)
-# Convolve filter with input
+filters = read_filter_weights()
 result = convolve3d(input, filters, stride)
 
 # Print result to file

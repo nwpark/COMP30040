@@ -10,9 +10,13 @@ module cnn_test ();
   //============================================================================
   parameter I_WIDTH = 8;
   parameter CHANNELS_IN = 3;
+  parameter CHANNELS_OUT = 5;
+  parameter FILTER_SIZE = 5;
   parameter IMAGE_WIDTH = 64;
   parameter IMAGE_HEIGHT = 32;
+  parameter STRIDE = 4;
   parameter total_input_pixels = IMAGE_WIDTH*IMAGE_HEIGHT;
+  parameter total_output_pixels = ((IMAGE_WIDTH-FILTER_SIZE+1)/STRIDE)*((IMAGE_HEIGHT-FILTER_SIZE+1)/STRIDE);
 
   //============================================================================
   // Declarations and data

@@ -18,29 +18,11 @@ out_channels = 5
 bits = 16
 
 
-def convolve(array, filter):
-  filter = flip_array(filter)
-  res = np.zeros((out_height, out_width)).astype(int)
-  for y in range(0, out_height):
-    for x in range(0, out_width):
-      res[y, x] = np.sum(filter * array[y*stride:y*stride+f_size, x*stride:x*stride+f_size])
-  return res
-
-
+image = create_input_image(in_channels, in_height, in_width)
 filters = read_filter_weights()
-input = create_input_image()
 
-# Initialize array to hold result
-result = np.zeros((out_channels, out_height, out_width)).astype(int)
+layer_0 = convolve3d(image, filters, stride)
+# layer_1 = maxpooling(layer_0, stride)
 
-# Generate filter with random weights
-np.random.seed(1)
-filter = (64 * np.random.random((f_size, f_size))).astype(int) - 32
-
-# Perform convolution on all input and output channels
-for out_channel in range(0, result.shape[0]):
-  for in_channel in range(0, input.shape[0]):
-    result[out_channel] = result[out_channel] + convolve(input[in_channel], filters[out_channel, in_channel])
-
-# Write result to file
-print_hex_array3d(result, 'output_data.hex', bits)
+# Print result to file
+print_hex_array3d(layer_0, 'output_data.hex', bits)
