@@ -7,6 +7,7 @@ sys.path.insert(0, '..')
 from utils import *
 
 
+# Parameters
 width = 64
 height = 32
 channels = 3

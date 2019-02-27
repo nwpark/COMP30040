@@ -33,14 +33,14 @@ module cnn (
     .valid(layer_0_valid)
   );
 
-//  // Relu layer
-//  relu_layer #(
-//    .I_WIDTH(16),
-//    .CHANNELS(5)
-//  ) layer_1 (
-//    .input_data(layer_0_output),
-//    .output_data(layer_1_output)
-//  );
+  // Relu layer
+  relu_layer #(
+    .I_WIDTH(16),
+    .CHANNELS(5)
+  ) layer_1 (
+    .input_data(layer_0_output),
+    .output_data(layer_1_output)
+  );
 
   // Pooling layer
   pooling_layer #(
@@ -52,7 +52,7 @@ module cnn (
   ) layer_2 (
     .clk(clk),
     .clk_en(layer_0_valid),
-    .input_data(layer_0_output),
+    .input_data(layer_1_output),
     .output_data(output_data),
     .valid(valid)
   );
