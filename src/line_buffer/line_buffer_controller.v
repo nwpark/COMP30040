@@ -7,11 +7,11 @@ module line_buffer_controller #(
   parameter IMAGE_SIZE = -1,
   parameter STRIDE = -1
 )(
-  input wire                           clk,
-  input wire                           clk_en,
-  output reg [(`LOG2(IMAGE_SIZE))-1:0] rd_addr,
-  output reg [(`LOG2(IMAGE_SIZE))-1:0] wr_addr,
-  output reg                           valid
+  input wire                            clk,
+  input wire                            clk_en,
+  output reg  [(`LOG2(IMAGE_SIZE))-1:0] rd_addr,
+  output reg  [(`LOG2(IMAGE_SIZE))-1:0] wr_addr,
+  output wire                           valid
 );
 
   // TODO: these bus widths are totally off
@@ -19,6 +19,8 @@ module line_buffer_controller #(
   reg [(`LOG2(IMAGE_SIZE))-1:0] y;
   reg [(`LOG2(STRIDE))-1    :0] stride_x;
   reg [(`LOG2(STRIDE))-1    :0] stride_y;
+
+  reg output_valid;
 
   initial rd_addr = 1;
   initial wr_addr = 0;
@@ -59,14 +61,16 @@ module line_buffer_controller #(
       // Update stride_x
       if (stride_x == STRIDE-1 || x < FILTER_SIZE-1) stride_x <= 0;
       else stride_x <= stride_x + 1;
-
-      // Determine validity
-      valid <= (y >= FILTER_SIZE-1)
-        && (x >= FILTER_SIZE-1)
-        && (stride_x == 0)
-        && (stride_y == 0);
     end
+
+    // Determine validity
+    output_valid <= (y >= FILTER_SIZE-1)
+      && (x >= FILTER_SIZE-1)
+      && (stride_x == 0)
+      && (stride_y == 0);
   end
+
+  assign valid = output_valid && clk_en;
 
 endmodule
 

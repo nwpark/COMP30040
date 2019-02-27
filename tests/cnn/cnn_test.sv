@@ -16,7 +16,7 @@ module cnn_test ();
   parameter IMAGE_HEIGHT = 32;
   parameter STRIDE = 4;
   parameter total_input_pixels = IMAGE_WIDTH*IMAGE_HEIGHT;
-  parameter total_output_pixels = ((IMAGE_WIDTH-FILTER_SIZE+1)/STRIDE)*((IMAGE_HEIGHT-FILTER_SIZE+1)/STRIDE);
+  parameter total_output_pixels = 21;
 
   //============================================================================
   // Declarations and data
@@ -38,7 +38,7 @@ module cnn_test ();
   wire [79:0] output_data;
   wire valid;
 
-  cnn image_recognizer (
+  cnn conv_nn (
     .clk(clk),
     .clk_en(clk_en),
     .input_data(input_data),
@@ -53,8 +53,8 @@ module cnn_test ();
 
   initial begin
     clk = 0; clk_en = 1;
-    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/input_data.hex", input_array);
-    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/convolutional_layer/output_data.hex", output_array);
+    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/cnn/input_data.hex", input_array);
+    $readmemh("/home/mbyx4np3/COMP30040/COMP30040/tests/cnn/output_data.hex", output_array);
   end
 
   initial begin
