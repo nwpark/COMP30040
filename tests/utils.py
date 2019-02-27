@@ -115,3 +115,9 @@ def maxpooling(array, stride):
       for x in range(0, out_width):
         result[z,y,x] = np.max(array[z,y*stride:(y+1)*stride,x*stride:(x+1)*stride])
   return result
+
+
+def relu(array):
+  result = np.copy(array)
+  result[result < 0] = 0
+  return result

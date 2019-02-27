@@ -7,18 +7,14 @@ sys.path.insert(0, '..')
 from utils import *
 
 
-np.random.seed(0)
-channel_0 = (256 * np.random.random((32, 64))).astype(int)
+# Parameters
+width = 64
+height = 32
+channels = 3
+bits = 8
 
-np.random.seed(1)
-channel_1 = (256 * np.random.random((32, 64))).astype(int)
 
-np.random.seed(2)
-channel_2 = (256 * np.random.random((32, 64))).astype(int)
+image = create_input_image(channels, height, width)
+result = relu(image)
 
-channel_0[channel_0 > 127] = 0
-channel_1[channel_1 > 127] = 0
-channel_2[channel_2 > 127] = 0
-
-data = (channel_0 << 16) + (channel_1 << 8) + channel_2
-print_hex_array2d(data, 'output_data.hex', 16)
+print_hex_array3d(result, 'output_data.hex', bits)
