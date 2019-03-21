@@ -2,6 +2,9 @@
 `define CNN
 
 `include "/home/mbyx4np3/COMP30040/COMP30040/src/common/definitions.v"
+`include "/home/mbyx4np3/COMP30040/COMP30040/src/convolutional_layer/convolutional_layer.sv"
+`include "/home/mbyx4np3/COMP30040/COMP30040/src/relu_layer/relu_layer.sv"
+`include "/home/mbyx4np3/COMP30040/COMP30040/src/pooling_layer/pooling_layer.v"
 
 module cnn (
   input wire         clk,

@@ -1,7 +1,6 @@
 `ifndef LINE_BUFF_CTRL
 `define LINE_BUFF_CTRL
 
-// TODO: address bus is bigger than it needs to be
 module line_buffer_controller #(
   parameter FILTER_SIZE = -1,
   parameter IMAGE_SIZE = -1,
@@ -14,7 +13,6 @@ module line_buffer_controller #(
   output wire                           valid
 );
 
-  // TODO: these bus widths are totally off
   reg [(`LOG2(IMAGE_SIZE))-1:0] x;
   reg [(`LOG2(IMAGE_SIZE))-1:0] y;
   reg [(`LOG2(STRIDE))-1    :0] stride_x;
