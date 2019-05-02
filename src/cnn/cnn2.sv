@@ -28,7 +28,6 @@ module cnn (
 
   // Pooling layer
   pooling_layer #(
-    .I_WIDTH(16),
     .CHANNELS(5),
     .FILTER_SIZE(2),
     .IMAGE_SIZE(15),
